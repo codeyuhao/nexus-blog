@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nexus-blog-api
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && python manage.py seed_data && gunicorn blog_project.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    plan: free
+    region: singapore
+    rootDir: backend
+    healthCheckPath: /api/articles/
+    envVars:
+      - key: SECRET_KEY
+        value: django-insecure-nexus-blog-2025-prod-key
+      - key: DEBUG
+        value: "false"
+      - key: FRONTEND_URL
+        value: https://frontend-blond-six-93.vercel.app
+      - key: RENDER
+        value: "true"
+    autoDeploy: yes
