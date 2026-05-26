@@ -35,3 +35,6 @@ frontend/dist/
 
 # Database (local only)
 *.sqlite3
+
+# Check scripts
+_check*.py

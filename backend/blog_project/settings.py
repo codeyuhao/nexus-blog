@@ -65,10 +65,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
+def get_database_path():
+    env_path = os.environ.get('DATABASE_PATH')
+    if env_path:
+        return env_path
+    if os.environ.get('RENDER', False):
+        data_dir = os.environ.get('RENDER_DATA_DIR', '/var/data')
+        os.makedirs(data_dir, exist_ok=True)
+        return os.path.join(data_dir, 'db.sqlite3')
+    return str(BASE_DIR / 'db.sqlite3')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.environ.get('DATABASE_PATH', str(BASE_DIR / 'db.sqlite3')),
+        'NAME': get_database_path(),
     }
 }
 
